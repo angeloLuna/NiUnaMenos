@@ -10,29 +10,6 @@
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="estilos.css">
     <title>#NiUnaMenos</title>
-    <script>
-        // let confirmo = true;
-        // let puedeSerEmergencia = false;
-        // setTimeout(() => {
-        //     confirmo = false;
-        //     swal("Hola de nuevo", "¿Triunfando?", "info").then(() => {
-        //         confirmo = true;
-        //     });
-        //     setTimeout(() => {
-        //         if (!confirmo) {
-        //             puedeSerEmergencia = true;
-        //             swal("¿Todo bien?", "Aún no sabemos de ti, ¿Todo bien?", "warning").then(() => {
-        //                 confirmo = true;
-        //             });
-        //             setTimeout(() => {
-        //                 if (!confirmo && puedeSerEmergencia) {
-        //                     swal("Emergencia", "Notificamos a tus contactos, esperamos que estes bien", "error");
-        //                 }
-        //             }, 5000);
-        //         }
-        //     }, 5000);
-        // }, 1000);
-    </script>
 </head>
 <body>
 
@@ -59,27 +36,54 @@
 </nav>
 
 
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
-<!---------------------------------------------------------->
+<div class="container">
+    <div id="formulario">
+        <div class="alert alert-primary" role="alert">
+            Esperamos que nunca lo utilices, pero esta información nos ayudará a informar en caso de emergencia.
+        </div>
+        <form>
+            <div class="form-group">
+                <label for="apodo">¿Como quieres que te llamemos?</label>
+                <input type="text" class="form-control" id="apodo"
+                       placeholder="¿Como quieres que te llamemos?">
+            </div>
+            <div class="form-group">
+                <label for="nombre">Tus nombres (recuerda que es para que tu contacto te ubique)</label>
+                <input type="text" class="form-control" id="nombre"
+                       placeholder="Nombre">
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input type="text" class="form-control" id="apellidos"
+                       placeholder="Apellidos">
+            </div>
+            <div class="form-group">
+                <label for="contacto">¿A quién quieres que contactemos en caso de emergencia?</label>
+                <input type="text" class="form-control" id="contacto"
+                       placeholder="Nombre completo">
+            </div>
+            <div class="form-group">
+                <label for="correoContacto">Su correo</label>
+                <input type="text" class="form-control" id="correoContacto"
+                       placeholder="Su correo">
+            </div>
+            <div class="form-group">
+                <label for="numeroContacto">Su teléfono</label>
+                <input type="text" class="form-control" id="numeroContacto"
+                       placeholder="Su teléfono">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="guardar()">Aceptar</button>
+        </form>
+    </div>
+    <div id="bienvenida">
+        <h3 id="mensaje"></h3>
+    </div>
+</div>
 
 
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -87,5 +91,91 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
+<script>
+    localStorage.setItem("datos", "false");
+    let datos = localStorage.getItem("datos");
+    let apodo = localStorage.getItem("apodo");
+    let nombre = localStorage.getItem("nombre");
+    let apellidos = localStorage.getItem("apellidos");
+    let contacto = localStorage.getItem("contacto");
+    let correoContacto = localStorage.getItem("correoContacto");
+    let numeroContacto = localStorage.getItem("numeroContacto");
+    let latitud;
+    let longitud;
+
+    if (datos==="true") {
+        $("#bienvenida").show();
+        $("#formulario").hide();
+        $("#mensaje").html("Un gusto verte de nuevo " + apodo);
+    } else {
+        $("#bienvenida").hide();
+        $("#formulario").show();
+    }
+
+    if (datos==="true") {
+        const SEGUNDOS = 5 * 1000;
+        let confirmo = true;
+        let puedeSerEmergencia = false;
+        setTimeout(() => {
+            confirmo = false;
+            swal("Hola de nuevo", "¿Triunfando?", "info").then(() => {
+                confirmo = true;
+            });
+            setTimeout(() => {
+                if (!confirmo) {
+                    puedeSerEmergencia = true;
+                    swal("¿Todo bien?", "Aún no sabemos de ti, ¿Todo bien?", "warning").then(() => {
+                        confirmo = true;
+                    });
+                    setTimeout(() => {
+                        if (!confirmo && puedeSerEmergencia) {
+                            emergencia();
+                            swal("Emergencia", "Notificamos a tus contactos, esperamos que estes bien", "error");
+                        }
+                    }, SEGUNDOS);
+                }
+            }, SEGUNDOS);
+        }, SEGUNDOS);
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        }
+    }
+
+    function showPosition(position) {
+        latitud = position.coords.latitude;
+        longitud = position.coords.longitude;
+    }
+
+    function emergencia() {
+        getLocation();
+        $.post("http://172.16.1.39:3000/emergency/",
+            {
+                "name": nombre + " " + apellidos,
+                "contactName": contacto,
+                "mail": correoContacto,
+                "phoneNumber": numeroContacto,
+                "gLat": latitud,
+                "lng": longitud
+            },
+            function (data, status) {
+                swal("Data: " + data + "\nStatus: " + status);
+            });
+    }
+
+    function guardar() {
+        localStorage.setItem("datos", "true");
+        localStorage.setItem("apodo", $("#apodo").val());
+        localStorage.setItem("nombre", $("#nombre").val());
+        localStorage.setItem("apellidos", $("#apellidos").val());
+        localStorage.setItem("contacto", $("#contacto").val());
+        localStorage.setItem("correoContacto", $("#correoContacto").val());
+        localStorage.setItem("numeroContacto", $("#numeroContacto").val());
+        location.reload();
+    }
+</script>
 </body>
 </html>
