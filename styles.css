@@ -1,0 +1,12 @@
+.mapa{
+
+    width: 500px;
+    height: 500px;
+    
+}
+
+.conte{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
